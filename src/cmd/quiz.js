@@ -8,18 +8,20 @@ module.exports={
         const quizEmbed = {
             color: 0xF7CAC9,
             author: {
-                name: '민둘봇의 타로 하트',
+                name: '퀴즈봇의 퀴즈 문제',
                 icon_url: 'https://i.imgur.com/AD91Z6z.jpg',
             },
-            description: '6개의 이모지로 입력된 하트를 하나만 아무거나 선택해 주세요!',
-            image: {url: "https://i.imgur.com/SP7ND76.png"},
+            description: '퀴즈 문제는 여기에 들어갈 예정',
+            image: {url: "attachment://imsi.png"},
         };
-
+        
         const oxButton = new MessageActionRow()
         .addComponents(new MessageButton().setCustomId('O').setLabel('O').setStyle("SUCCESS"),)
         .addComponents(new MessageButton().setCustomId('X').setLabel('X').setStyle("DANGER"),)
 
-        const asdf=await msg.channel.send({embeds: [quizEmbed], components:[oxButton]});
+        const asdf=await msg.channel.send({embeds: [quizEmbed], components:[oxButton],
+            files: ['./src/asset/imsi.png']
+        });
 
         const filter = () => {return true;}
         const collector = asdf.createMessageComponentCollector({filter});
