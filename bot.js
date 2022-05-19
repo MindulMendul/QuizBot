@@ -35,7 +35,7 @@ bot.on('messageCreate', async (msg) => {
 	const command = args.shift();//명령어 인식할 거
 	
 	try{
-		const cmdName=CmdtoNameMap.get(command); // cmd 베리에이션으로부터 이름 찾기
+		const cmdName=CmdtoNameMap.get(command); // cmd 데리베이션으로부터 이름 찾기
 		const exe=commands.get(cmdName); // execute 저장
 		if(exe===undefined) return; // 없으면 스킵
 		exe(msg); // 있으면 ㄱㄱ
