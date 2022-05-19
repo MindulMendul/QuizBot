@@ -1,6 +1,7 @@
 const {MessageActionRow, MessageButton}=require('discord.js');
 module.exports={
 	name: `퀴즈`,
+    cmd: [`퀴즈`,'ㅋㅈ'],
     permission: ["ADD_REACTIONS", "EMBED_LINKS"],
     //타로하트 생성과정
     async execute(msg){

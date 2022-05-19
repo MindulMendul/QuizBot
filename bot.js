@@ -1,4 +1,5 @@
 const quiz=require("./src/cmd/quiz");
+const {CmdtoName}=require("./src/CmdtoName");
 
 require('dotenv').config();
 const Discord = require('discord.js');
@@ -13,11 +14,14 @@ const bot = new Discord.Client({
 	partials: ['CHANNEL',]});
 exports.bot=bot;//봇
 
-const commands = new Discord.Collection(); //명령어 모음집
-bot.on('ready', async (a) => {//정상적으로 작동하는지 출력하는 코드
+const CmdtoNameMap = new Discord.Collection(); // cmd와 name 매칭해주는 맵
+const commands = new Discord.Collection(); // 명령어 모음집
+
+bot.on('ready', async (a) => {// 정상적으로 작동하는지 출력하는 코드
     console.log(`${bot.user.tag}님이 로그인했습니다.`);
     bot.user.setActivity(process.env.activityString, { type: 'PLAYING' });
 
+	await CmdtoName(CmdtoNameMap, quiz);
 	commands.set(quiz.name, quiz.execute);
 });
 
@@ -31,7 +35,8 @@ bot.on('messageCreate', async (msg) => {
 	const command = args.shift();//명령어 인식할 거
 	
 	try{
-		const exe=commands.get(command); // execute 저장
+		const cmdName=CmdtoNameMap.get(command); // cmd 베리에이션으로부터 이름 찾기
+		const exe=commands.get(cmdName); // execute 저장
 		if(exe===undefined) return; // 없으면 스킵
 		exe(msg); // 있으면 ㄱㄱ
 	} catch (err) {
