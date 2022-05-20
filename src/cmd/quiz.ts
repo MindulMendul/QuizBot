@@ -1,10 +1,12 @@
-const {MessageActionRow, MessageButton}=require('discord.js');
-module.exports={
+import { Message, MessageActionRow, MessageButton } from 'discord.js';
+import { command } from '../type/type';
+
+export const quiz :command = {
 	name: `퀴즈`,
     cmd: [`퀴즈`,'ㅋㅈ'],
     permission: ["ADD_REACTIONS", "EMBED_LINKS"],
     //타로하트 생성과정
-    async execute(msg){
+    async execute(msg: Message){
         const quizEmbed = {
             color: 0xF7CAC9,
             author: {
@@ -30,4 +32,4 @@ module.exports={
             i.update({content:"ㅎㅇ", embeds: [], components:[]});
         });
     }
-}
+};

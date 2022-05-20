@@ -2,14 +2,18 @@
   "name": "mindulbot",
   "version": "1.0.0",
   "scripts": {
-    "start": "node bot.js",
-    "dev": "nodemon bot.js"
+    "start": "node bot.ts",
+    "dev": "nodemon bot.ts"
   },
   "dependencies": {
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "libsodium-wrappers": "^0.7.9",
     "moment": "^2.29.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "typescript": "^4.6.4"
+  },
+  "devDependencies": {
+    "ts-node": "^10.7.0"
   }
 }
