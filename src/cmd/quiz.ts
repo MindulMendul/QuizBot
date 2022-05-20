@@ -1,13 +1,13 @@
 import { Message, MessageActionRow, MessageButton } from 'discord.js';
-import { command } from '../type/type';
+import { command, embed } from '../type/type';
 
-export const quiz :command = {
+export const quiz : command = {
 	name: `퀴즈`,
     cmd: [`퀴즈`,'ㅋㅈ'],
     permission: ["ADD_REACTIONS", "EMBED_LINKS"],
     //타로하트 생성과정
     async execute(msg: Message){
-        const quizEmbed = {
+        const quizEmbed: embed = {
             color: 0xF7CAC9,
             author: {
                 name: '퀴즈봇의 퀴즈 문제',

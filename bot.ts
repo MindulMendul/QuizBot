@@ -1,5 +1,5 @@
 import { quiz } from "./src/cmd/quiz";
-import { CmdtoName } from "./src/CmdtoName";
+import { CmdtoName } from "./src/func/CmdtoName";
 import { config } from 'dotenv';
 import Discord, { Collection, Message } from 'discord.js';
 import { command } from "./src/type/type";

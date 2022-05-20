@@ -10,3 +10,13 @@ export interface command {
     permission: Array<string>
     execute: execute["execute"];
 }
+
+export interface embed {
+    color: number,
+    author: {
+        name: string,
+        icon_url: string,
+    },
+    description: string,
+    image: {url: string}
+}
