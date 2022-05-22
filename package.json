@@ -2,7 +2,7 @@
   "name": "mindulbot",
   "version": "1.0.0",
   "scripts": {
-    "start": "node bot.ts",
+    "start": "ts-node bot.ts",
     "dev": "nodemon bot.ts"
   },
   "dependencies": {

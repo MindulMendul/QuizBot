@@ -1,14 +1,10 @@
 import { Message } from "discord.js";
 
-export interface execute {
-    execute : (arg: Message) => Promise<void>
-};
-
-export interface command {
+export interface cmd {
     name: string
     cmd: Array<string>
     permission: Array<string>
-    execute: execute["execute"];
+    execute: (arg0: Message, arg1: Array<string>) => Promise<void | string | Message>
 }
 
 export interface embed {

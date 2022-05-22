@@ -1,7 +1,7 @@
 import { Message, MessageActionRow, MessageButton } from 'discord.js';
-import { command, embed } from '../type/type';
+import { cmd, embed } from '../type/type';
 
-export const quiz : command = {
+export const quiz : cmd = {
 	name: `퀴즈`,
     cmd: [`퀴즈`,'ㅋㅈ'],
     permission: ["ADD_REACTIONS", "EMBED_LINKS"],
