@@ -3,7 +3,7 @@ import { cmd } from "../type/type";
 
 import { quiz } from "../cmd/quiz";
 import { participate } from "../cmd/participate";
-import { mark } from "../cmd/mark";
+import { grade } from "../cmd/grade";
 
 const CmdtoName = async (map: Collection<string, string>,
                                 commands: Collection<string, cmd>,
@@ -17,5 +17,5 @@ const CmdtoName = async (map: Collection<string, string>,
 export const cmdLoad = (map: Collection<string, string>, commands: any) => {
     CmdtoName(map, commands, quiz);
     CmdtoName(map, commands, participate);
-    CmdtoName(map, commands, mark);
+    CmdtoName(map, commands, grade);
 }
