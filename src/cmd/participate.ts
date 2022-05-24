@@ -30,7 +30,6 @@ export const participate: cmd = {
 						const json = JSON.stringify(db);
 						fs.writeFile('./userDB.json', json, () => { });
 					}
-
 				}
 			})
 		}

@@ -1,9 +1,9 @@
 import { Collection, Message } from "discord.js";
 import { cmd } from "../type/type";
 
-import { quiz } from "../cmd/quiz";
-import { participate } from "../cmd/participate";
-import { grade } from "../cmd/grade";
+import { quiz } from "../cmd/Quiz";
+import { participate } from "../cmd/Participate";
+import { grade } from "../cmd/Grade";
 
 const CmdtoName = async (map: Collection<string, string>,
                                 commands: Collection<string, cmd>,
