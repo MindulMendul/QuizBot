@@ -1,9 +1,11 @@
-import { Collection, Message } from "discord.js";
+import { Collection } from "discord.js";
 import { cmd } from "../types/type";
 
 import { quiz } from "../cmd/Quiz";
-import { participate } from "../cmd/Participate";
 import { grade } from "../cmd/Grade";
+import { insertMember } from "../cmd/InsertMember";
+import { updateMember } from "../cmd/UpdateMember";
+import { deleteMember } from "../cmd/DeleteMember";
 
 const CmdtoName = async (map: Collection<string, string>,
                                 commands: Collection<string, cmd>,
@@ -16,6 +18,8 @@ const CmdtoName = async (map: Collection<string, string>,
 
 export const cmdLoad = (map: Collection<string, string>, commands: any) => {
     CmdtoName(map, commands, quiz);
-    CmdtoName(map, commands, participate);
+    CmdtoName(map, commands, insertMember);
+    CmdtoName(map, commands, updateMember);
+    CmdtoName(map, commands, deleteMember);
     CmdtoName(map, commands, grade);
 }

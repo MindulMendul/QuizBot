@@ -10,5 +10,5 @@ export const makeQuiz = () => {
     const data = utils.sheet_to_json(sheet);
 
     const json = JSON.stringify(data);
-    fs.writeFile(`${dirAsset}/DB/userDB.json`, json, () => { });
+    fs.writeFile(`${dirAsset}/DB/quizDB.json`, json, () => { });
 }
