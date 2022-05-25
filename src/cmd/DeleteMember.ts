@@ -8,8 +8,8 @@ interface participant {
 }
 
 export const deleteMember: cmd = {
-	name: `삭제`,
-	cmd: [`삭제`, 'ㅅㅈ'],
+	name: `불참`,
+	cmd: [`불참`, 'ㅂㅊ'],
 	permission: ["ADD_REACTIONS", "EMBED_LINKS"],
 	async execute(msg, args) {
 		const entity: participant = {

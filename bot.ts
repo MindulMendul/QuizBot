@@ -2,7 +2,6 @@ import { cmdLoad } from "./src/func/CmdtoName";
 import { config } from 'dotenv';
 import Discord, { Collection, Message } from 'discord.js';
 import { cmd } from "./src/types/type";
-import { makeQuiz } from "./src/func/makeQuiz";
 
 config(); // dotenv config
 
@@ -28,7 +27,6 @@ bot.on('ready', () => {// 정상적으로 작동하는지 출력하는 코드
 	console.log(`${user.tag}님이 로그인했습니다.`);
 	user.setActivity(process.env.activityString as string, { type: 'PLAYING' });
 
-	makeQuiz();
 	cmdLoad(CmdtoNameMap, commands); // 명령어 가져오는 함수
 });
 

@@ -1,6 +1,7 @@
 import { Collection } from "discord.js";
 import { cmd } from "../types/type";
 
+import { makeQuiz } from "../cmd/MakeQuiz";
 import { quiz } from "../cmd/Quiz";
 import { grade } from "../cmd/Grade";
 import { insertMember } from "../cmd/InsertMember";
@@ -17,6 +18,7 @@ const CmdtoName = async (map: Collection<string, string>,
 }
 
 export const cmdLoad = (map: Collection<string, string>, commands: any) => {
+    CmdtoName(map, commands, makeQuiz);
     CmdtoName(map, commands, quiz);
     CmdtoName(map, commands, insertMember);
     CmdtoName(map, commands, updateMember);
