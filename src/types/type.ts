@@ -16,3 +16,7 @@ export interface embed {
     description: string,
     image: {url: string}
 }
+
+export interface DB {
+	table: Array<any>
+}

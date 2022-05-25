@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { cmd } from "../type/type";
+import { cmd } from "../types/type";
 
 export const grade : cmd = {
 	name: `정답`,

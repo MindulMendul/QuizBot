@@ -1,9 +1,8 @@
 import { cmdLoad } from "./src/func/CmdtoName";
 import { config } from 'dotenv';
 import Discord, { Collection, Message } from 'discord.js';
-import { cmd } from "./src/type/type";
+import { cmd } from "./src/types/type";
 import { makeQuiz } from "./src/func/makeQuiz";
-
 
 config(); // dotenv config
 
@@ -21,6 +20,8 @@ export const bot = new Discord.Client({
 const CmdtoNameMap: Collection<string, string> = new Discord.Collection(); // cmd와 name 매칭해주는 맵
 const commands: Collection<string, cmd>
 	= new Discord.Collection(); // 명령어 모음집
+
+export const dirAsset='./src/asset';
 
 bot.on('ready', () => {// 정상적으로 작동하는지 출력하는 코드
 	const user = bot.user as Discord.ClientUser;

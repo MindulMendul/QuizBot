@@ -1,5 +1,5 @@
 import { Collection, Message } from "discord.js";
-import { cmd } from "../type/type";
+import { cmd } from "../types/type";
 
 import { quiz } from "../cmd/Quiz";
 import { participate } from "../cmd/Participate";
