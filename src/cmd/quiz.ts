@@ -24,7 +24,12 @@ export const quiz: cmd = {
       new MessageButton().setCustomId('X').setLabel('X').setStyle('DANGER')
     );
 
+    const makeQuizStr=(OUserList:Array<string>, XUserList:Array<string>, countNum:number)=>{
+      return`**O를 선택한 사람**\n> ${OUserList}\n**X를 선택한 사람**\n> ${XUserList}\n**OX를 고른 사람** : ${countNum}명`;
+    }
+    const quizStr=makeQuizStr([],[],0);
     const asdf = await msg.channel.send({
+      content: quizStr,
       embeds: [quizEmbed],
       components: [oxButton],
       files: ['./src/asset/icon.png', './src/asset/imsi.png']
@@ -39,13 +44,20 @@ export const quiz: cmd = {
       });
     };
     const collector = asdf.createMessageComponentCollector({ filter });
+    
     collector.on('collect', async (i) => {
       const content = i.message.content;
-      const [count, ...args] = content.split(",");
-      console.log(count);
-      console.log(args);
+      const [O, OCountStr, X, XCountStr, countStr] = content.split("\n");
+      
+      const OCount=OCountStr.slice(3).split(", ");
+      const XCount=XCountStr.slice(3).split(", ");
+      const count=Number(countStr.replace(/[^0-9]/g,""));
 
-      i.update({content:""});
+      console.log(OCount);
+      console.log(XCount);
+      console.log(count);
+
+      i.update({content:makeQuizStr(OCount, XCount, count)});
     });
   }
 };
