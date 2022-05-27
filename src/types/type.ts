@@ -16,3 +16,9 @@ export interface embed {
   description: string;
   image: { url: string };
 }
+
+export interface participant {
+  id: string;
+  name: string;
+  ox: Array<string>;
+}

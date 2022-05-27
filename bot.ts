@@ -21,7 +21,8 @@ export const bot = new Client({
 const CmdtoNameMap: Collection<string, string> = new Collection(); // cmd와 name 매칭해주는 맵
 const commands: Collection<string, cmd> = new Collection(); // 명령어 모음집
 
-export const dirAsset = './src/asset';
+export const dirUserDB=`./src/DB/userDB.json`;
+export const dirQuizDB=`./src/DB/quizDB.json`;
 
 bot.on('ready', () => {
   // 정상적으로 작동하는지 출력하는 코드
