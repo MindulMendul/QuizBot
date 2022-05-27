@@ -3,17 +3,20 @@
   "version": "1.0.0",
   "scripts": {
     "start": "ts-node bot.ts",
-    "dev": "nodemon bot.ts"
+    "dev": "nodemon bot.ts",
+    "prepublish": "npm run pretty",
+    "pretty": "prettier --config .prettierrc --write bot.ts 'src/**/*.ts'"
   },
   "dependencies": {
-    "discord.js": "^13.6.0",
-    "dotenv": "^16.0.0",
-    "moment": "^2.29.1",
+    "discord.js": "^13.7.0",
+    "dotenv": "^16.0.1",
+    "moment": "^2.29.3",
     "nodemon": "^2.0.16",
     "ts-xlsx": "^0.0.11",
-    "typescript": "^4.6.4"
+    "typescript": "^4.7.2"
   },
   "devDependencies": {
-    "ts-node": "^10.7.0"
+    "prettier": "^2.6.2",
+    "ts-node": "^10.8.0"
   }
 }
