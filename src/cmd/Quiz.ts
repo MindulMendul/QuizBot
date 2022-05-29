@@ -52,10 +52,10 @@ export const quiz: cmd = {
 
       const [O, OCountStr, X, XCountStr, countStr] = content.split("\n");
       
-      const OCount=OCountStr.slice(3).split(" ");
-      const XCount=XCountStr.slice(3).split(" ");
-      let count=Number(countStr.replace(/[^0-9]/g, "")); 
-      OCount.pop(); XCount.pop();
+      const OCount=OCountStr.slice(2).split(" ").filter((e)=>{return e!=''});
+      const XCount=XCountStr.slice(2).split(" ").filter((e)=>{return e!=''});
+      let count=Number(countStr.replace(/[^0-9]/g, ""));
+      //OCount.pop(); XCount.pop();
 
       //read UserDB
       const rawDB = fs.readFileSync(dirUserDB, 'utf8');
@@ -77,13 +77,20 @@ export const quiz: cmd = {
         if(!OCount.includes(name) && !XCount.includes(name)) count++;
         
         //OX list
-        if(OIndex>-1){
-          if (i.customId=="O") OCount[OIndex] = (name);
-          else if (i.customId=="X") XCount[XIndex] = (name);
-        } else {
-          if (i.customId=="O") OCount.push(name);
-          else if (i.customId=="X") XCount.push(name);
-        }        
+        if(OIndex>-1){ // OCount에 정보가 있던 경우
+          if (i.customId=="X"){ // OCount -> XCount
+            OCount.splice(OIndex, 1); // OCount에 있는 건 지우고
+            XCount.push(name); // XCount에는 채우고
+          }
+        } else if(XIndex>-1){ // XCount에 정보가 있던 경우
+          if (i.customId=="O") { // XCount -> OCount
+            XCount.splice(XIndex, 1); // XCount에 있는 건 지우고
+            OCount.push(name); // OCount에는 채우고
+          }
+        } else { // 둘 다 정보가 없던 경우
+          if (i.customId=="O") OCount.push(name); // OCount에 채우기
+          else if (i.customId=="X") XCount.push(name); // XCount에 채우기
+        }
       }
 
       i.update({content:makeQuizStr(OCount, XCount, count)});
