@@ -1,7 +1,7 @@
 import { cmdLoad } from './src/func/CmdtoName';
 import { config } from 'dotenv';
 import { Client, ClientUser, Collection, Message } from 'discord.js';
-import { cmd } from './src/types/type';
+import { CMD } from './src/types/type';
 
 config(); // dotenv config
 
@@ -19,10 +19,11 @@ export const bot = new Client({
 });
 
 const CmdtoNameMap: Collection<string, string> = new Collection(); // cmd와 name 매칭해주는 맵
-const commands: Collection<string, cmd> = new Collection(); // 명령어 모음집
+const commands: Collection<string, CMD> = new Collection(); // 명령어 모음집
 
-export const dirUserDB=`./src/DB/userDB.json`;
-export const dirQuizDB=`./src/DB/quizDB.json`;
+export const dirUserDB = `./src/DB/userDB.json`;
+export const dirQuizDB = `./src/DB/quizDB.json`;
+export const dirEventDB = `./src/DB/eventDB.json`;
 
 bot.on('ready', () => {
   // 정상적으로 작동하는지 출력하는 코드
@@ -48,7 +49,7 @@ bot.on('messageCreate', (msg: Message) => {
 
   try {
     const cmdName = CmdtoNameMap.get(command as string); // cmd 데리베이션으로부터 이름 찾기
-    const cmd = commands.get(cmdName as string) as cmd;
+    const cmd = commands.get(cmdName as string) as CMD;
     const exe = cmd.execute; // execute 저장
     if (exe === undefined) return; // 없으면 스킵
 

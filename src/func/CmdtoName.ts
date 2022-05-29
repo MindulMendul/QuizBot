@@ -1,5 +1,5 @@
 import { Collection } from 'discord.js';
-import { cmd } from '../types/type';
+import { CMD } from '../types/type';
 
 import { makeQuiz } from '../cmd/MakeQuiz';
 import { quiz } from '../cmd/Quiz';
@@ -8,7 +8,7 @@ import { insertMember } from '../cmd/InsertMember';
 import { updateMember } from '../cmd/UpdateMember';
 import { deleteMember } from '../cmd/DeleteMember';
 
-const CmdtoName = async (map: Collection<string, string>, commands: Collection<string, cmd>, component: cmd) => {
+const CmdtoName = async (map: Collection<string, string>, commands: Collection<string, CMD>, component: CMD) => {
   const cmdList = component.cmd;
   const name = component.name;
   cmdList.forEach((e: string) => map.set(e, name));

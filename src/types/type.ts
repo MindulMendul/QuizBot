@@ -1,13 +1,13 @@
 import { Message } from 'discord.js';
 
-export interface cmd {
+export interface CMD {
   name: string;
   cmd: Array<string>;
   permission: Array<string>;
   execute: (arg0: Message, arg1: Array<string>) => Promise<void | string | Message>;
 }
 
-export interface embed {
+export interface EMBED {
   color: number;
   author: {
     name: string;
@@ -17,8 +17,23 @@ export interface embed {
   image: { url: string };
 }
 
-export interface participant {
+export interface PARTICIPANT {
   id: string;
   name: string;
   ox: Array<string>;
+}
+
+export interface EVENT {
+  quizIndex: number;
+  msgID: string;
+}
+
+export interface QUIZ {
+  문제순서: string;
+  난이도: string;
+  분류: string;
+  문제지: string;
+  정답: string;
+  해설: string;
+  해설사진: string;
 }
