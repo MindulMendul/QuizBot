@@ -55,7 +55,6 @@ export const grade: CMD = {
         return dbe.name == e;
       });
       if (entityID > -1) DB[entityID].ox.push(quiz.정답 === 'O' ? 'O' : 'X');
-      console.log(DB);
       fs.writeFileSync(dirUserDB, JSON.stringify(DB));
     });
     XCount.forEach((e) => {
@@ -63,7 +62,6 @@ export const grade: CMD = {
         return dbe.name == e;
       });
       if (entityID > -1) DB[entityID].ox.push(quiz.정답 === 'X' ? 'O' : 'X');
-      console.log(DB);
       fs.writeFileSync(dirUserDB, JSON.stringify(DB));
     });
   }
