@@ -7,6 +7,12 @@ export const updateMember: CMD = {
   cmd: [`이름변경`, '변경', 'ㅂㄱ', 'ㅇㄹㅂㄱ', 'ㅇㄼㄱ'],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg, args) {
+    const name = args.join(' ').replace(/\s+/gi, "");
+    if (name.length < 1) {
+      msg.channel.send("공백으로 이루어진 이름은 쓸 수가 없어요!");
+      return;
+    }
+
     //read UserDB
     const rawDB = fs.readFileSync(dirUserDB, 'utf8');
     const DB = JSON.parse(rawDB) as Array<PARTICIPANT>;
@@ -22,7 +28,7 @@ export const updateMember: CMD = {
       //통과되었을 때
       const newEntity = {
         id: validation.id,
-        name: args.join(' '),
+        name: name,
         ox: validation.ox
       };
       DB.push(newEntity);

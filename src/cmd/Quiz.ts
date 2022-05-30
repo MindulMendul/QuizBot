@@ -8,6 +8,11 @@ export const quiz: CMD = {
   cmd: [`퀴즈`, 'ㅋㅈ'],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg) {
+    //나만 할 수 있는 거지롱~
+    if(msg.author.id!=process.env.OWNER_ID) return;
+
+    msg.delete();
+
     //문제지 정보는 eventDB에 저장되어 있음
     const rawEvent = fs.readFileSync(dirEventDB, 'utf-8');
     const event = JSON.parse(rawEvent) as EVENT;
@@ -24,7 +29,7 @@ export const quiz: CMD = {
         name: `퀴즈봇의 퀴즈 문제 ${currentQuizIndex + 1}`,
         icon_url: 'attachment://icon.png'
       },
-      description: quiz.문제지,
+      description: `${quiz.분류}\n${quiz.문제지}`,
       image: { url: 'attachment://imsi.png' }
     };
 
@@ -34,9 +39,9 @@ export const quiz: CMD = {
     );
 
     const makeQuizStr = (OUserList: Array<string>, XUserList: Array<string>, countNum: number) => {
-      return `**O를 선택한 사람**\n> ${OUserList.join(' ')} \n**X를 선택한 사람**\n> ${XUserList.join(
-        ' '
-      )} \n**OX를 고른 사람 수** : ${countNum}명`;
+      return (
+        `**O를 선택한 사람**\n> ${OUserList.join(' ')} \n**X를 선택한 사람**\n> ${XUserList.join(' ')} \n**OX를 고른 사람 수** : ${countNum}명`
+        );
     };
 
     const quizStr = makeQuizStr([], [], 0);

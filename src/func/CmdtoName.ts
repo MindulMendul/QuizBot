@@ -7,6 +7,7 @@ import { grade } from '../cmd/Grade';
 import { insertMember } from '../cmd/InsertMember';
 import { updateMember } from '../cmd/UpdateMember';
 import { deleteMember } from '../cmd/DeleteMember';
+import { finish } from '../cmd/Finish';
 
 const CmdtoName = async (map: Collection<string, string>, commands: Collection<string, CMD>, component: CMD) => {
   const cmdList = component.cmd;
@@ -22,4 +23,5 @@ export const cmdLoad = (map: Collection<string, string>, commands: any) => {
   CmdtoName(map, commands, updateMember);
   CmdtoName(map, commands, deleteMember);
   CmdtoName(map, commands, grade);
+  CmdtoName(map, commands, finish);
 };

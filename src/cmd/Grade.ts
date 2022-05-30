@@ -1,5 +1,5 @@
-import { Message, TextChannel } from 'discord.js';
-import { CMD, EVENT, PARTICIPANT, QUIZ } from '../types/type';
+import { Message, MessageActionRow, MessageButton, TextChannel } from 'discord.js';
+import { CMD, EMBED, EVENT, PARTICIPANT, QUIZ } from '../types/type';
 import fs from 'fs';
 import { dirEventDB, dirQuizDB, dirUserDB } from '../../bot';
 
@@ -8,6 +8,9 @@ export const grade: CMD = {
   cmd: [`정답`, 'ㅈㄷ'],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg) {
+    //나만 할 수 있는 거지롱~
+    if(msg.author.id!=process.env.OWNER_ID) return;
+
     //문제지 정보는 eventDB에 저장되어 있음
     const rawEvent = fs.readFileSync(dirEventDB, 'utf-8');
     const event = JSON.parse(rawEvent) as EVENT;
@@ -31,8 +34,8 @@ export const grade: CMD = {
     fs.writeFileSync(dirEventDB, resetEventEntity);
 
     //퀴즈 정보 가져와야 함
-    const rawQuiz = fs.readFileSync(dirQuizDB, 'utf-8');
-    const quizList = JSON.parse(rawQuiz) as Array<QUIZ>;
+    const rawQuizDB = fs.readFileSync(dirQuizDB, 'utf-8');
+    const quizList = JSON.parse(rawQuizDB) as Array<QUIZ>;
     const quiz = quizList[event.quizIndex];
 
     const [O, OCountStr, X, XCountStr, countStr] = paper.content.split('\n');
@@ -47,22 +50,82 @@ export const grade: CMD = {
         return e != '';
       });
 
-    const rawDB = fs.readFileSync(dirUserDB, 'utf8');
-    const DB = JSON.parse(rawDB) as Array<PARTICIPANT>;
+    const rawUserDB = fs.readFileSync(dirUserDB, 'utf8');
+    const UserDB = JSON.parse(rawUserDB) as Array<PARTICIPANT>;
 
     OCount.forEach((e) => {
-      const entityID = DB.findIndex((dbe) => {
+      const entityID = UserDB.findIndex((dbe) => {
         return dbe.name == e;
       });
-      if (entityID > -1) DB[entityID].ox.push(quiz.정답 === 'O' ? 'O' : 'X');
-      fs.writeFileSync(dirUserDB, JSON.stringify(DB));
+      if (entityID > -1) UserDB[entityID].ox.push(quiz.정답 === 'O' ? 'O' : 'X');
+      fs.writeFileSync(dirUserDB, JSON.stringify(UserDB));
     });
+
     XCount.forEach((e) => {
-      const entityID = DB.findIndex((dbe) => {
+      const entityID = UserDB.findIndex((dbe) => {
         return dbe.name == e;
       });
-      if (entityID > -1) DB[entityID].ox.push(quiz.정답 === 'X' ? 'O' : 'X');
-      fs.writeFileSync(dirUserDB, JSON.stringify(DB));
+      if (entityID > -1) UserDB[entityID].ox.push(quiz.정답 === 'X' ? 'O' : 'X');
+      fs.writeFileSync(dirUserDB, JSON.stringify(UserDB));
+    });
+
+    const quizEmbed: EMBED = {
+      color: 0xf7cac9,
+      author: {
+        name: `정답은 ${quiz.정답}`,
+        icon_url: 'attachment://icon.png'
+      },
+      description: quiz.해설,
+      image: { url: quiz.해설사진 }
+    };
+
+    const nextButton = new MessageActionRow().addComponents(
+      new MessageButton().setCustomId('next').setLabel('순위표').setStyle('SUCCESS')
+    );
+
+    const asdf = await msg.channel.send({
+      embeds: [quizEmbed],
+      components: [nextButton],
+      files: ['./src/asset/icon.png']
+    });
+
+    const filter = () => { return msg.author.id===process.env.OWNER_ID };
+    const collector = asdf.createMessageComponentCollector({ filter });
+    collector.on('collect', async (i) => {
+      if(i.customId == 'next'){
+        const makeScoreStr=()=>{
+          const numO=(e:PARTICIPANT)=>{
+            return e.ox.filter((e)=>{return e==="O";}).length;
+          };
+          const rankList = UserDB
+          .sort((a,b)=>{return numO(a)-numO(b);})
+          .map((e, i)=>{return `${i+1}. ${e.name}: ${numO(e)}`;});
+          return rankList.join("\n");
+        }
+
+        const scoreEmbed: EMBED = {
+          color: 0xf7cac9,
+          author: {
+            name: `푼 문제 수: ${currentQuizIndex+1}  남은 문제 수: ${quizList.length-currentQuizIndex-1}`,
+            icon_url: 'attachment://icon.png'
+          },
+          description: makeScoreStr(),
+          image: { url: "" }
+        };
+
+        const finishButton = new MessageActionRow().addComponents(
+          new MessageButton().setCustomId('finish').setLabel('버튼을 누르면 점수판이 사라져요!').setStyle('SUCCESS')
+        );
+
+        await i.update({
+          embeds:[scoreEmbed],
+          components:[finishButton],
+          files: ['./src/asset/icon.png']
+        });
+      } else if(i.customId == 'finish'){
+        msg.delete();
+        asdf.delete();
+      }
     });
   }
 };
