@@ -43,21 +43,21 @@ bot.on('messageCreate', (msg: Message) => {
 
   const PREFIX = process.env.PREFIX as string;
   if (!msg.content.startsWith(PREFIX)) return; //PREFIX 확인
-  
+
   const args = msg.content.slice(PREFIX.length).trim().split(/\s+/); //명령어 말 배열에 담기
   const command = args.shift(); //명령어 인식할 거
 
   try {
     const cmdName = CmdtoNameMap.get(command as string); // cmd 데리베이션으로부터 이름 찾기
     const cmd = commands.get(cmdName as string) as CMD;
-    if(cmd==undefined) throw "nocmd";
+    if (cmd == undefined) throw 'nocmd';
     const exe = cmd.execute; // execute 저장
     if (exe === undefined) return; // 없으면 스킵
 
     exe(msg, args); // 있으면 ㄱㄱ
   } catch (err) {
-    if(err=="nocmd"){
-      msg.channel.send("명령어를 인식하지 못 했어요!");
+    if (err == 'nocmd') {
+      msg.channel.send('명령어를 인식하지 못 했어요!');
     } else {
       console.error(`어이 ${err}`);
     }

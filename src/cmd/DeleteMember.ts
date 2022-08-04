@@ -6,7 +6,7 @@ export const deleteMember: CMD = {
   name: `불참`,
   cmd: [`불참`, 'ㅂㅊ'],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
-  async execute(msg, args) {
+  async execute(msg) {
     //read UserDB
     const rawDB = fs.readFileSync(dirUserDB, 'utf8');
     const DB = JSON.parse(rawDB) as Array<PARTICIPANT>;

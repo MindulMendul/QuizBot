@@ -19,6 +19,7 @@ export interface EMBED {
 
 export interface PARTICIPANT {
   id: string;
+  profileName: string;
   name: string;
   ox: Array<string>;
 }
@@ -29,10 +30,10 @@ export interface EVENT {
 }
 
 export interface QUIZ {
-  문제순서: string;
+  문제번호: string;
   난이도: string;
-  분류: string;
   문제지: string;
+  문제사진: string;
   정답: string;
   해설: string;
   해설사진: string;

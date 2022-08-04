@@ -7,15 +7,16 @@ export const insertMember: CMD = {
   cmd: [`참가`, 'ㅊㄱ'],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg, args) {
-    const name = args.join(' ').replace(/\s+/gi, "");
+    const name = args.join(' ').replace(/\s+/gi, '');
     if (name.length < 1) {
-      msg.channel.send("공백으로 이루어진 이름은 쓸 수가 없어요!");
+      msg.channel.send('공백으로 이루어진 이름은 쓸 수가 없어요!');
       return;
     }
 
     //참가자 정보
     const entity: PARTICIPANT = {
       id: msg.author.id,
+      profileName: msg.author.tag,
       name: name,
       ox: []
     };

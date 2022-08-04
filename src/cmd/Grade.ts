@@ -9,7 +9,7 @@ export const grade: CMD = {
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg) {
     //나만 할 수 있는 거지롱~
-    if(msg.author.id!=process.env.OWNER_ID) return;
+    if (msg.author.id != process.env.OWNER_ID) return;
 
     //문제지 정보는 eventDB에 저장되어 있음
     const rawEvent = fs.readFileSync(dirEventDB, 'utf-8');
@@ -38,7 +38,7 @@ export const grade: CMD = {
     const quizList = JSON.parse(rawQuizDB) as Array<QUIZ>;
     const quiz = quizList[event.quizIndex];
 
-    const [O, OCountStr, X, XCountStr, countStr] = paper.content.split('\n');
+    const [OCountStr, XCountStr] = paper.content.split('\n');
     const OCount = OCountStr.slice(2)
       .split(' ')
       .filter((e) => {
@@ -76,41 +76,49 @@ export const grade: CMD = {
         icon_url: 'attachment://icon.png'
       },
       description: quiz.해설,
-      image: { url: quiz.해설사진 }
+      image: quiz.해설사진.length ? { url: `attachment://${quiz.해설사진}` } : { url: '' }
     };
 
     const nextButton = new MessageActionRow().addComponents(
       new MessageButton().setCustomId('next').setLabel('순위표').setStyle('SUCCESS')
     );
 
+    const quizFiles = ['./src/assets/images/icon.png'];
+    if (quiz.해설사진) quizFiles.push(`./src/assets/images/answer/${quiz.해설사진}`);
     const asdf = await msg.channel.send({
       embeds: [quizEmbed],
       components: [nextButton],
-      files: ['./src/asset/icon.png']
+      files: quizFiles
     });
 
-    const filter = () => { return msg.author.id===process.env.OWNER_ID };
+    const filter = () => {
+      return msg.author.id === process.env.OWNER_ID;
+    };
     const collector = asdf.createMessageComponentCollector({ filter });
     collector.on('collect', async (i) => {
-      if(i.customId == 'next'){
-        const makeScoreStr=()=>{
-          const numO=(e:PARTICIPANT)=>{
-            return e.ox.filter((e)=>{return e==="O";}).length;
+      if (i.customId == 'next') {
+        const makeScoreStr = () => {
+          const numO = (e: PARTICIPANT) => {
+            return e.ox.filter((e) => {
+              return e === 'O';
+            }).length;
           };
-          const rankList = UserDB
-          .sort((a,b)=>{return numO(a)-numO(b);})
-          .map((e, i)=>{return `${i+1}. ${e.name}: ${numO(e)}`;});
-          return rankList.join("\n");
-        }
+          const rankList = UserDB.sort((a, b) => {
+            return numO(a) - numO(b);
+          }).map((e, i) => {
+            return `${i + 1}. ${e.name}: ${numO(e)}`;
+          });
+          return rankList.join('\n');
+        };
 
         const scoreEmbed: EMBED = {
           color: 0xf7cac9,
           author: {
-            name: `푼 문제 수: ${currentQuizIndex+1}  남은 문제 수: ${quizList.length-currentQuizIndex-1}`,
+            name: `푼 문제 수: ${currentQuizIndex + 1}  남은 문제 수: ${quizList.length - currentQuizIndex - 1}`,
             icon_url: 'attachment://icon.png'
           },
           description: makeScoreStr(),
-          image: { url: "" }
+          image: { url: 'attachment://imsi.png' }
         };
 
         const finishButton = new MessageActionRow().addComponents(
@@ -118,11 +126,11 @@ export const grade: CMD = {
         );
 
         await i.update({
-          embeds:[scoreEmbed],
-          components:[finishButton],
-          files: ['./src/asset/icon.png']
+          embeds: [scoreEmbed],
+          components: [finishButton],
+          files: ['./src/assets/images/icon.png', './src/assets/images/imsi.png']
         });
-      } else if(i.customId == 'finish'){
+      } else if (i.customId == 'finish') {
         msg.delete();
         asdf.delete();
       }

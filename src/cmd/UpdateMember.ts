@@ -7,9 +7,9 @@ export const updateMember: CMD = {
   cmd: [`이름변경`, '변경', 'ㅂㄱ', 'ㅇㄹㅂㄱ', 'ㅇㄼㄱ'],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg, args) {
-    const name = args.join(' ').replace(/\s+/gi, "");
+    const name = args.join(' ').replace(/\s+/gi, '');
     if (name.length < 1) {
-      msg.channel.send("공백으로 이루어진 이름은 쓸 수가 없어요!");
+      msg.channel.send('공백으로 이루어진 이름은 쓸 수가 없어요!');
       return;
     }
 
@@ -28,6 +28,7 @@ export const updateMember: CMD = {
       //통과되었을 때
       const newEntity = {
         id: validation.id,
+        profileName: validation.profileName,
         name: name,
         ox: validation.ox
       };

@@ -9,7 +9,7 @@ export const quiz: CMD = {
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg) {
     //나만 할 수 있는 거지롱~
-    if(msg.author.id!=process.env.OWNER_ID) return;
+    if (msg.author.id != process.env.OWNER_ID) return;
 
     msg.delete();
 
@@ -23,14 +23,16 @@ export const quiz: CMD = {
     const quizList = JSON.parse(rawQuiz) as Array<QUIZ>;
     const quiz = quizList[currentQuizIndex];
 
+    console.log(quiz);
+
     const quizEmbed: EMBED = {
       color: 0xf7cac9,
       author: {
         name: `퀴즈봇의 퀴즈 문제 ${currentQuizIndex + 1}`,
         icon_url: 'attachment://icon.png'
       },
-      description: `${quiz.분류}\n${quiz.문제지}`,
-      image: { url: 'attachment://imsi.png' }
+      description: `난이도: ${quiz.난이도}\n${quiz.문제지}`,
+      image: quiz.문제사진 ? { url: `attachment://${quiz.문제사진}` } : { url: '' }
     };
 
     const oxButton = new MessageActionRow().addComponents(
@@ -39,17 +41,20 @@ export const quiz: CMD = {
     );
 
     const makeQuizStr = (OUserList: Array<string>, XUserList: Array<string>, countNum: number) => {
-      return (
-        `**O를 선택한 사람**\n> ${OUserList.join(' ')} \n**X를 선택한 사람**\n> ${XUserList.join(' ')} \n**OX를 고른 사람 수** : ${countNum}명`
-        );
+      return `**O를 선택한 사람**\n> ${OUserList.join(' ')} \n**X를 선택한 사람**\n> ${XUserList.join(
+        ' '
+      )} \n**OX를 고른 사람 수** : ${countNum}명`;
     };
 
     const quizStr = makeQuizStr([], [], 0);
+    const quizFiles = ['./src/assets/images/icon.png'];
+    if (quiz.문제사진) quizFiles.push(`./src/assets/images/quiz/${quiz.문제사진}`);
+
     const asdf = await msg.channel.send({
       content: quizStr,
       embeds: [quizEmbed],
       components: [oxButton],
-      files: ['./src/asset/icon.png', './src/asset/imsi.png']
+      files: quizFiles
     });
 
     const eventEntity = JSON.stringify({
@@ -79,13 +84,14 @@ export const quiz: CMD = {
         .filter((e) => {
           return e != '';
         });
+
       const XCount = XCountStr.slice(2)
         .split(' ')
         .filter((e) => {
           return e != '';
         });
+        
       let count = Number(countStr.replace(/[^0-9]/g, ''));
-      //OCount.pop(); XCount.pop();
 
       //read UserDB
       const rawDB = fs.readFileSync(dirUserDB, 'utf8');
