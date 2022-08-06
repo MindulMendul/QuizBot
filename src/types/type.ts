@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 
 export interface CMD {
   name: string;
-  cmd: Array<string>;
+  cmds: Array<string>;
   permission: Array<string>;
   execute: (arg0: Message, arg1: Array<string>) => Promise<void | string | Message>;
 }
@@ -27,6 +27,9 @@ export interface PARTICIPANT {
 export interface EVENT {
   quizIndex: number;
   msgID: string;
+  XList: Array<PARTICIPANT>;
+  OList: Array<PARTICIPANT>;
+  count: number;
 }
 
 export interface QUIZ {

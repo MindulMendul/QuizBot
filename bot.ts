@@ -34,7 +34,7 @@ bot.on('ready', () => {
   cmdLoad(CmdtoNameMap, commands); // 명령어 가져오는 함수
 });
 
-bot.on('messageCreate', (msg: Message) => {
+bot.on('messageCreate', async (msg: Message) => {
   if (msg.author.bot) return; //봇은 거름
   if (msg.channel.type === 'DM') {
     msg.channel.send('DM은 막혀있어요, 죄송합니다. ㅠㅠ');
@@ -42,25 +42,25 @@ bot.on('messageCreate', (msg: Message) => {
   }
 
   const PREFIX = process.env.PREFIX as string;
-  if (!msg.content.startsWith(PREFIX)) return; //PREFIX 확인
+
+  //PREFIX이 없으면 그냥 삭제
+  if (!msg.content.startsWith(PREFIX)) {
+    msg.delete();
+    return;
+  }
 
   const args = msg.content.slice(PREFIX.length).trim().split(/\s+/); //명령어 말 배열에 담기
-  const command = args.shift(); //명령어 인식할 거
+  const command = args.shift() as string; //명령어 인식할 거
 
   try {
-    const cmdName = CmdtoNameMap.get(command as string); // cmd 데리베이션으로부터 이름 찾기
-    const cmd = commands.get(cmdName as string) as CMD;
-    if (cmd == undefined) throw 'nocmd';
-    const exe = cmd.execute; // execute 저장
-    if (exe === undefined) return; // 없으면 스킵
-
-    exe(msg, args); // 있으면 ㄱㄱ
+    const cmdName = CmdtoNameMap.get(command) as string; // cmd 데리베이션으로부터 이름 찾기
+    const cmd = commands.get(cmdName) as CMD;
+    if (cmd == undefined) await msg.reply('명령어를 인식하지 못 했어요!');
+    else await cmd.execute(msg, args);
+    msg.delete();
   } catch (err) {
-    if (err == 'nocmd') {
-      msg.channel.send('명령어를 인식하지 못 했어요!');
-    } else {
-      console.error(`어이 ${err}`);
-    }
+    msg.reply(`에러: ${err}`);
+    console.error(`에러~ ${err}`);
   }
 });
 

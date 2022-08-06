@@ -1,19 +1,17 @@
 import { MessageActionRow, MessageButton } from 'discord.js';
 import { dirUserDB } from '../../bot';
+import readJSON from '../func/readJSON';
 import { CMD, EMBED, PARTICIPANT } from '../types/type';
-import { quiz } from './Quiz';
-import fs from 'fs';
 
 export const finish: CMD = {
   name: `수고하셨습니다`,
-  cmd: [`수고하셨습니다`],
+  cmds: [`수고하셨습니다`],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg) {
     //나만 할 수 있는 거지롱~
     if (msg.author.id != process.env.OWNER_ID) return;
 
-    const rawUserDB = fs.readFileSync(dirUserDB, 'utf8');
-    const UserDB = JSON.parse(rawUserDB) as Array<PARTICIPANT>;
+    const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
 
     const makeScoreStr = () => {
       const numO = (e: PARTICIPANT) => {
@@ -21,7 +19,7 @@ export const finish: CMD = {
           return e === 'O';
         }).length;
       };
-      const rankList = UserDB.sort((a, b) => {
+      const rankList = userDB.sort((a, b) => {
         return numO(a) - numO(b);
       }).map((e, i) => {
         return `${i + 1}. ${e.name}: ${numO(e)}`;

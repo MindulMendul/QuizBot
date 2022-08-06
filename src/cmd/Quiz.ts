@@ -1,34 +1,31 @@
-import { GuildMember, MessageActionRow, MessageButton } from 'discord.js';
+import { MessageActionRow, MessageButton } from 'discord.js';
 import { CMD, EMBED, PARTICIPANT, QUIZ, EVENT } from '../types/type';
-import fs from 'fs';
+
 import { dirEventDB, dirQuizDB, dirUserDB } from '../../bot';
+import readJSON from '../func/readJSON';
+import makeQuizStr from '../func/makeQuizStr';
+import writeJSON from '../func/writeJSON';
 
 export const quiz: CMD = {
   name: `퀴즈`,
-  cmd: [`퀴즈`, 'ㅋㅈ'],
+  cmds: [`퀴즈`, 'ㅋㅈ'],
   permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
   async execute(msg) {
     //나만 할 수 있는 거지롱~
     if (msg.author.id != process.env.OWNER_ID) return;
 
-    msg.delete();
-
     //문제지 정보는 eventDB에 저장되어 있음
-    const rawEvent = fs.readFileSync(dirEventDB, 'utf-8');
-    const event = JSON.parse(rawEvent) as EVENT;
-    const currentQuizIndex = event.quizIndex;
+    const eventDB = readJSON(dirEventDB) as EVENT;
+    const quizDB = readJSON(dirQuizDB) as Array<QUIZ>;
 
-    //퀴즈 정보 가져와야 함
-    const rawQuiz = fs.readFileSync(dirQuizDB, 'utf-8');
-    const quizList = JSON.parse(rawQuiz) as Array<QUIZ>;
-    const quiz = quizList[currentQuizIndex];
+    if (eventDB.msgID.length) { await msg.reply("이미 문제가 출제된 상태에요!"); return; }
 
-    console.log(quiz);
+    const quiz = quizDB[eventDB.quizIndex];
 
     const quizEmbed: EMBED = {
       color: 0xf7cac9,
       author: {
-        name: `퀴즈봇의 퀴즈 문제 ${currentQuizIndex + 1}`,
+        name: `퀴즈봇의 퀴즈 문제 ${eventDB.quizIndex + 1}`,
         icon_url: 'attachment://icon.png'
       },
       description: `난이도: ${quiz.난이도}\n${quiz.문제지}`,
@@ -40,97 +37,78 @@ export const quiz: CMD = {
       new MessageButton().setCustomId('X').setLabel('X').setStyle('DANGER')
     );
 
-    const makeQuizStr = (OUserList: Array<string>, XUserList: Array<string>, countNum: number) => {
-      return `**O를 선택한 사람**\n> ${OUserList.join(' ')} \n**X를 선택한 사람**\n> ${XUserList.join(
-        ' '
-      )} \n**OX를 고른 사람 수** : ${countNum}명`;
-    };
-
-    const quizStr = makeQuizStr([], [], 0);
     const quizFiles = ['./src/assets/images/icon.png'];
     if (quiz.문제사진) quizFiles.push(`./src/assets/images/quiz/${quiz.문제사진}`);
 
     const asdf = await msg.channel.send({
-      content: quizStr,
+      content: makeQuizStr([], [], 0),
       embeds: [quizEmbed],
       components: [oxButton],
       files: quizFiles
     });
 
-    const eventEntity = JSON.stringify({
-      quizIndex: Number(currentQuizIndex),
-      msgID: asdf.id
+    writeJSON(dirEventDB, {
+      quizIndex: Number(eventDB.quizIndex),
+      msgID: asdf.id,
+      XList: [],
+      OList: [],
+      count: 0
     });
-    fs.writeFileSync(dirEventDB, eventEntity);
 
+    // user DB 안에 정보가 있는지 검사
     const filter = () => {
-      // user DB 안에 정보가 있는지 검사
-      const rawDB = fs.readFileSync(dirUserDB, 'utf8');
-      const DB = JSON.parse(rawDB) as Array<PARTICIPANT>;
-      return DB.some((e: PARTICIPANT) => {
+      const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
+      return userDB.some((e: PARTICIPANT) => {
         return e.id === msg.author.id;
       });
     };
     const collector = asdf.createMessageComponentCollector({ filter });
 
     collector.on('collect', async (i) => {
-      const content = i.message.content;
-      const memberID = (i.member as GuildMember).user.id;
-
-      const [O, OCountStr, X, XCountStr, countStr] = content.split('\n');
-
-      const OCount = OCountStr.slice(2)
-        .split(' ')
-        .filter((e) => {
-          return e != '';
-        });
-
-      const XCount = XCountStr.slice(2)
-        .split(' ')
-        .filter((e) => {
-          return e != '';
-        });
-        
-      let count = Number(countStr.replace(/[^0-9]/g, ''));
+      const memberID = i.member?.user.id;
+      if (!memberID) { await msg.reply("무슨 버그?"); console.log(i); }
 
       //read UserDB
-      const rawDB = fs.readFileSync(dirUserDB, 'utf8');
-      const DB = JSON.parse(rawDB) as Array<PARTICIPANT>;
-      const validation = DB.find((e: PARTICIPANT) => {
-        return e.id === memberID;
-      }); // entity가 DB 안에 있는지 검사
+      const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
+      const user = userDB.find((e) => { return e.id === memberID; }); // entity가 userDB 안에 있는지 검사
 
-      if (validation) {
-        const name = validation.name;
-        const OIndex = OCount.indexOf(name);
-        const XIndex = XCount.indexOf(name);
-
+      if (user) {
+        const event = readJSON(dirEventDB) as EVENT;
+        let { quizIndex, msgID, OList, XList, count } = event;
         //Count
-        if (!OCount.includes(name) && !XCount.includes(name)) count++;
+        const OIndex = OList.findIndex((e) => { return e.id == user.id });
+        const XIndex = XList.findIndex((e) => { return e.id == user.id });
 
         //OX list
         if (OIndex > -1) {
           // OCount에 정보가 있던 경우
-          if (i.customId == 'X') {
-            // OCount -> XCount
-            OCount.splice(OIndex, 1); // OCount에 있는 건 지우고
-            XCount.push(name); // XCount에는 채우고
+          if (i.customId == 'X') {// OCount -> XCount
+            OList.splice(OIndex, 1); // OCount에 있는 건 지우고
+            XList.push(user); // XCount에는 채우고
           }
         } else if (XIndex > -1) {
           // XCount에 정보가 있던 경우
-          if (i.customId == 'O') {
-            // XCount -> OCount
-            XCount.splice(XIndex, 1); // XCount에 있는 건 지우고
-            OCount.push(name); // OCount에는 채우고
+          if (i.customId == 'O') {// XCount -> OCount
+            XList.splice(XIndex, 1); // XCount에 있는 건 지우고
+            OList.push(user); // OCount에는 채우고
           }
         } else {
           // 둘 다 정보가 없던 경우
-          if (i.customId == 'O') OCount.push(name); // OCount에 채우기
-          else if (i.customId == 'X') XCount.push(name); // XCount에 채우기
+          if (i.customId == 'O') OList.push(user); // OCount에 채우기
+          else if (i.customId == 'X') XList.push(user); // XCount에 채우기
+          count++;
         }
-      }
 
-      i.update({ content: makeQuizStr(OCount, XCount, count) });
+        writeJSON(dirEventDB, {
+          quizIndex: quizIndex,
+          msgID: msgID,
+          OList: OList,
+          XList: XList,
+          count: count
+        })
+        i.update({ content: makeQuizStr(OList, XList, count) });
+      }
     });
   }
 };
+

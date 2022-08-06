@@ -10,9 +10,8 @@ import { deleteMember } from '../cmd/DeleteMember';
 import { finish } from '../cmd/Finish';
 
 const CmdtoName = async (map: Collection<string, string>, commands: Collection<string, CMD>, component: CMD) => {
-  const cmdList = component.cmd;
-  const name = component.name;
-  cmdList.forEach((e: string) => map.set(e, name));
+  const {cmds, name} = component;
+  cmds.forEach((e: string) => map.set(e, name));
   commands.set(name, component);
 };
 
