@@ -14,7 +14,8 @@ export const makeQuiz: CMD = {
       const workbook = readFile(`./src/assets/QuizSheet.xlsx`);
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-      writeJSON(dirQuizDB,
+      writeJSON(
+        dirQuizDB,
         (utils.sheet_to_json(sheet) as QUIZ[]).map((e) => {
           return {
             문제번호: e.문제번호 ? e.문제번호 : '',

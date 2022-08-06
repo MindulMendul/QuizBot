@@ -21,7 +21,8 @@ export const insertMember: CMD = {
     }); // entity가 DB 안에 있는지 검사
 
     //write UserDB
-    if (validation) {//통과되었을 때
+    if (validation) {
+      //통과되었을 때
       //참가자 정보
       const entity: PARTICIPANT = {
         id: msg.author.id,

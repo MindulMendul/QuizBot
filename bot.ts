@@ -7,10 +7,7 @@ import checkPermissions from './src/func/checkPermissions';
 config(); // dotenv config
 
 export const bot = new Client({
-  intents: [
-    'GUILD_MESSAGES',
-    'GUILDS',
-  ],
+  intents: ['GUILD_MESSAGES', 'GUILDS'],
   partials: ['CHANNEL']
 });
 
@@ -53,12 +50,10 @@ bot.on('messageCreate', async (msg: Message) => {
     const cmd = commands.get(cmdName) as CMD;
     if (cmd == undefined) await msg.reply('명령어를 인식하지 못 했어요!');
     else {
-      if (await checkPermissions(msg, cmd.permission as PermissionResolvable[]))
-        await cmd.execute(msg, args);
+      if (await checkPermissions(msg, cmd.permission as PermissionResolvable[])) await cmd.execute(msg, args);
     }
 
-    if (msg.channel.permissionsFor(bot.user as User)?.has("MANAGE_MESSAGES"))
-      msg.delete();
+    if (msg.channel.permissionsFor(bot.user as User)?.has('MANAGE_MESSAGES')) msg.delete();
   } catch (err) {
     msg.reply(`에러: ${err}`);
     console.error(`에러~ ${err}`);

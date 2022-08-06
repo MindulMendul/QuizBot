@@ -19,11 +19,13 @@ export const finish: CMD = {
           return e === 'O';
         }).length;
       };
-      const rankList = userDB.sort((a, b) => {
-        return numO(b) - numO(a);
-      }).map((e, i) => {
-        return `${i + 1}. ${e.name}\n> 정답: ${numO(e)}개 (정답률:${2.5 * numO(e)}%)`;
-      });
+      const rankList = userDB
+        .sort((a, b) => {
+          return numO(b) - numO(a);
+        })
+        .map((e, i) => {
+          return `${i + 1}. ${e.name}\n> 정답: ${numO(e)}개 (정답률:${2.5 * numO(e)}%)`;
+        });
       return rankList.join('\n');
     };
 
@@ -37,9 +39,7 @@ export const finish: CMD = {
       image: { url: 'attachment://imsi.png' }
     };
 
-    const Button = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId('finished').setLabel('수고많으셨습니다!').setStyle('PRIMARY')
-    );
+    const Button = new MessageActionRow().addComponents(new MessageButton().setCustomId('finished').setLabel('수고많으셨습니다!').setStyle('PRIMARY'));
 
     msg.channel.send({
       embeds: [finishedEmbed],

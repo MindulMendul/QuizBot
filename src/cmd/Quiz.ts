@@ -18,7 +18,10 @@ export const quiz: CMD = {
     const eventDB = readJSON(dirEventDB) as EVENT;
     const quizDB = readJSON(dirQuizDB) as Array<QUIZ>;
 
-    if (eventDB.msgID.length) { await msg.reply("이미 문제가 출제된 상태에요!"); return; }
+    if (eventDB.msgID.length) {
+      await msg.reply('이미 문제가 출제된 상태에요!');
+      return;
+    }
 
     const quiz = quizDB[eventDB.quizIndex];
 
@@ -66,30 +69,40 @@ export const quiz: CMD = {
 
     collector.on('collect', async (i) => {
       const memberID = i.member?.user.id;
-      if (!memberID) { await msg.reply("무슨 버그?"); console.log(i); }
+      if (!memberID) {
+        await msg.reply('무슨 버그?');
+        console.log(i);
+      }
 
       //read UserDB
       const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
-      const user = userDB.find((e) => { return e.id === memberID; }); // entity가 userDB 안에 있는지 검사
-
+      const user = userDB.find((e) => {
+        return e.id === memberID;
+      }); // entity가 userDB 안에 있는지 검사
 
       if (user) {
         const event = readJSON(dirEventDB) as EVENT;
         let { quizIndex, msgID, OList, XList, count } = event;
         //Count
-        const OIndex = OList.findIndex((e) => { return e.id == user.id });
-        const XIndex = XList.findIndex((e) => { return e.id == user.id });
+        const OIndex = OList.findIndex((e) => {
+          return e.id == user.id;
+        });
+        const XIndex = XList.findIndex((e) => {
+          return e.id == user.id;
+        });
 
         //OX list
         if (OIndex > -1) {
           // OCount에 정보가 있던 경우
-          if (i.customId == 'X') {// OCount -> XCount
+          if (i.customId == 'X') {
+            // OCount -> XCount
             OList.splice(OIndex, 1); // OCount에 있는 건 지우고
             XList.push(user); // XCount에는 채우고
           }
         } else if (XIndex > -1) {
           // XCount에 정보가 있던 경우
-          if (i.customId == 'O') {// XCount -> OCount
+          if (i.customId == 'O') {
+            // XCount -> OCount
             XList.splice(XIndex, 1); // XCount에 있는 건 지우고
             OList.push(user); // OCount에는 채우고
           }
@@ -106,10 +119,9 @@ export const quiz: CMD = {
           OList: OList,
           XList: XList,
           count: count
-        })
+        });
         i.update({ content: makeQuizStr(OList, XList, count) });
       }
     });
   }
 };
-

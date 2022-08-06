@@ -13,13 +13,16 @@ export const updateMember: CMD = {
     const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
     const user = userDB.find((e, i) => {
       if (e.id === msg.author.id) userDB.splice(i, 1); // 있으면 그냥 바로 지워버리면 됨!
-      return (e.id === msg.author.id);
+      return e.id === msg.author.id;
     }); // entity가 DB 안에 있는지 검사
 
     //write UserDB
     if (user) {
       const name = args.join(' ');
-      if (!name.length) { await msg.reply('공백으로 이루어진 이름은 쓸 수가 없어요!'); return; }
+      if (!name.length) {
+        await msg.reply('공백으로 이루어진 이름은 쓸 수가 없어요!');
+        return;
+      }
 
       //통과되었을 때
       const newUser = {
@@ -35,8 +38,12 @@ export const updateMember: CMD = {
       let { quizIndex, OList, XList, msgID, count } = event;
 
       //Count
-      const OIndex = OList.findIndex((e) => { return e.id == newUser.id });
-      const XIndex = XList.findIndex((e) => { return e.id == newUser.id });
+      const OIndex = OList.findIndex((e) => {
+        return e.id == newUser.id;
+      });
+      const XIndex = XList.findIndex((e) => {
+        return e.id == newUser.id;
+      });
 
       //OX list
       if (OIndex > -1) {
@@ -49,7 +56,9 @@ export const updateMember: CMD = {
         XList.push(newUser); // OCount에는 채우고
       }
 
-      const quizMsg = msg.channel.messages.cache.find((e) => { return e.id == msgID; })
+      const quizMsg = msg.channel.messages.cache.find((e) => {
+        return e.id == msgID;
+      });
       await quizMsg?.edit(makeQuizStr(OList, XList, count));
 
       writeJSON(dirEventDB, {

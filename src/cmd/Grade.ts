@@ -17,7 +17,9 @@ export const grade: CMD = {
     let { OList, XList } = event;
 
     // 문제가 없으면 채점이 안 됨
-    const paper = msg.channel.messages.cache.find((e) => { return e.id === event.msgID; });
+    const paper = msg.channel.messages.cache.find((e) => {
+      return e.id === event.msgID;
+    });
     if (!paper) return await msg.reply('문제가 없어서 채점이 불가능합니다.');
     else paper.delete(); // 문제가 있으면 삭제함
 
@@ -35,13 +37,17 @@ export const grade: CMD = {
 
     const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
     OList.forEach((e) => {
-      const entityID = userDB.findIndex((dbe) => { return dbe.id == e.id; });
+      const entityID = userDB.findIndex((dbe) => {
+        return dbe.id == e.id;
+      });
       if (entityID > -1) userDB[entityID].ox.push(quiz.정답 === 'O' ? 'O' : 'X');
       writeJSON(dirUserDB, userDB);
     });
 
     XList.forEach((e) => {
-      const entityID = userDB.findIndex((dbe) => { return dbe.id == e.id; });
+      const entityID = userDB.findIndex((dbe) => {
+        return dbe.id == e.id;
+      });
       if (entityID > -1) userDB[entityID].ox.push(quiz.정답 === 'X' ? 'O' : 'X');
       writeJSON(dirUserDB, userDB);
     });
@@ -56,9 +62,7 @@ export const grade: CMD = {
       image: quiz.해설사진.length ? { url: `attachment://${quiz.해설사진}` } : { url: '' }
     };
 
-    const nextButton = new MessageActionRow().addComponents(
-      new MessageButton().setCustomId('next').setLabel('순위표').setStyle('SUCCESS')
-    );
+    const nextButton = new MessageActionRow().addComponents(new MessageButton().setCustomId('next').setLabel('순위표').setStyle('SUCCESS'));
 
     const quizFiles = ['./src/assets/images/icon.png'];
     if (quiz.해설사진) quizFiles.push(`./src/assets/images/answer/${quiz.해설사진}`);
@@ -68,7 +72,9 @@ export const grade: CMD = {
       files: quizFiles
     });
 
-    const filter = () => { return msg.author.id === process.env.OWNER_ID; };
+    const filter = () => {
+      return msg.author.id === process.env.OWNER_ID;
+    };
     const collector = asdf.createMessageComponentCollector({ filter });
     collector.on('collect', async (i) => {
       if (!i.member) return;
@@ -81,11 +87,13 @@ export const grade: CMD = {
             }).length;
           };
 
-          const rankList = userDB.sort((a, b) => {
-            return numO(b)- numO(a);
-          }).map((e, i) => {
-            return `${i + 1}. ${e.name}: ${numO(e)}`;
-          });
+          const rankList = userDB
+            .sort((a, b) => {
+              return numO(b) - numO(a);
+            })
+            .map((e, i) => {
+              return `${i + 1}. ${e.name}: ${numO(e)}`;
+            });
           return rankList.join('\n');
         };
 
@@ -99,9 +107,7 @@ export const grade: CMD = {
           image: { url: 'attachment://imsi.png' }
         };
 
-        const finishButton = new MessageActionRow().addComponents(
-          new MessageButton().setCustomId('finish').setLabel('버튼을 누르면 점수판이 사라져요!').setStyle('SUCCESS')
-        );
+        const finishButton = new MessageActionRow().addComponents(new MessageButton().setCustomId('finish').setLabel('버튼을 누르면 점수판이 사라져요!').setStyle('SUCCESS'));
 
         await i.update({
           embeds: [scoreEmbed],
