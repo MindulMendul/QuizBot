@@ -7,14 +7,14 @@ import writeJSON from '../func/writeJSON';
 export const grade: CMD = {
   name: `정답`,
   cmds: [`정답`, 'ㅈㄷ'],
-  permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
+  permission: ['SEND_MESSAGES', 'MANAGE_MESSAGES', 'EMBED_LINKS', 'ATTACH_FILES'],
   async execute(msg) {
     //나만 할 수 있는 거지롱~
     if (msg.author.id != process.env.OWNER_ID) return;
 
     //문제지 정보는 eventDB에 저장되어 있음
     const event = readJSON(dirEventDB) as EVENT;
-    let { OList, XList, count } = event;
+    let { OList, XList } = event;
 
     // 문제가 없으면 채점이 안 됨
     const paper = msg.channel.messages.cache.find((e) => { return e.id === event.msgID; });

@@ -1,19 +1,15 @@
 import { cmdLoad } from './src/func/CmdtoName';
 import { config } from 'dotenv';
-import { Client, ClientUser, Collection, Message } from 'discord.js';
+import { Client, ClientUser, Collection, GuildMember, Message, PermissionResolvable, User } from 'discord.js';
 import { CMD } from './src/types/type';
+import checkPermissions from './src/func/checkPermissions';
 
 config(); // dotenv config
 
 export const bot = new Client({
   intents: [
-    'GUILD_VOICE_STATES',
     'GUILD_MESSAGES',
     'GUILDS',
-    'GUILD_MESSAGE_REACTIONS',
-    'DIRECT_MESSAGES',
-    'DIRECT_MESSAGE_REACTIONS',
-    'DIRECT_MESSAGE_TYPING'
   ],
   partials: ['CHANNEL']
 });
@@ -56,8 +52,13 @@ bot.on('messageCreate', async (msg: Message) => {
     const cmdName = CmdtoNameMap.get(command) as string; // cmd 데리베이션으로부터 이름 찾기
     const cmd = commands.get(cmdName) as CMD;
     if (cmd == undefined) await msg.reply('명령어를 인식하지 못 했어요!');
-    else await cmd.execute(msg, args);
-    msg.delete();
+    else {
+      if (await checkPermissions(msg, cmd.permission as PermissionResolvable[]))
+        await cmd.execute(msg, args);
+    }
+
+    if (msg.channel.permissionsFor(bot.user as User)?.has("MANAGE_MESSAGES"))
+      msg.delete();
   } catch (err) {
     msg.reply(`에러: ${err}`);
     console.error(`에러~ ${err}`);

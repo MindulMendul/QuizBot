@@ -7,11 +7,11 @@ import writeJSON from '../func/writeJSON';
 export const makeQuiz: CMD = {
   name: `퀴즈생성`,
   cmds: [`퀴즈생성`, 'ㅋㅈㅅㅅ'],
-  permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
+  permission: ['SEND_MESSAGES', 'MANAGE_MESSAGES'],
   async execute(msg: Message) {
     if (msg.author.id != process.env.OWNER_ID) return msg.reply(`봇 소유자만 가능한 명령어에요!`);
     else {
-      const workbook = readFile(`./src/assets/QuizSheet2.xlsx`);
+      const workbook = readFile(`./src/assets/QuizSheet.xlsx`);
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       writeJSON(dirQuizDB,

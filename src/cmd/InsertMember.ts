@@ -6,7 +6,7 @@ import writeJSON from '../func/writeJSON';
 export const insertMember: CMD = {
   name: `참가`,
   cmds: [`참가`, 'ㅊㄱ'],
-  permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
+  permission: ['SEND_MESSAGES', 'MANAGE_MESSAGES'],
   async execute(msg, args) {
     const name = args.join(' ');
     if (!name.length) {

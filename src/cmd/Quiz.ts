@@ -9,7 +9,7 @@ import writeJSON from '../func/writeJSON';
 export const quiz: CMD = {
   name: `퀴즈`,
   cmds: [`퀴즈`, 'ㅋㅈ'],
-  permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
+  permission: ['SEND_MESSAGES', 'MANAGE_MESSAGES', 'EMBED_LINKS', 'ATTACH_FILES'],
   async execute(msg) {
     //나만 할 수 있는 거지롱~
     if (msg.author.id != process.env.OWNER_ID) return;

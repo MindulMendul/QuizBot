@@ -7,7 +7,7 @@ import makeQuizStr from '../func/makeQuizStr';
 export const updateMember: CMD = {
   name: `이름변경`,
   cmds: [`이름변경`, '변경', 'ㅂㄱ', 'ㅇㄹㅂㄱ', 'ㅇㄼㄱ'],
-  permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
+  permission: ['SEND_MESSAGES', 'MANAGE_MESSAGES'],
   async execute(msg, args) {
     //read UserDB
     const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;

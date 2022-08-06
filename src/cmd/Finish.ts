@@ -6,7 +6,7 @@ import { CMD, EMBED, PARTICIPANT } from '../types/type';
 export const finish: CMD = {
   name: `수고하셨습니다`,
   cmds: [`수고하셨습니다`],
-  permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
+  permission: ['SEND_MESSAGES', 'MANAGE_MESSAGES', 'EMBED_LINKS', 'ATTACH_FILES'],
   async execute(msg) {
     //나만 할 수 있는 거지롱~
     if (msg.author.id != process.env.OWNER_ID) return;

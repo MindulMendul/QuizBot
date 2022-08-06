@@ -6,7 +6,7 @@ import readJSON from '../func/readJSON';
 export const deleteMember: CMD = {
   name: `불참`,
   cmds: [`불참`, 'ㅂㅊ'],
-  permission: ['ADD_REACTIONS', 'EMBED_LINKS'],
+  permission: ['SEND_MESSAGES', 'MANAGE_MESSAGES'],
   async execute(msg) {
     //read UserDB
     const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
