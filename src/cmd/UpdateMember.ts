@@ -32,7 +32,7 @@ export const updateMember: CMD = {
       writeJSON(dirUserDB, userDB);
 
       const event = readJSON(dirEventDB) as EVENT;
-      let { OList, XList, msgID, count } = event;
+      let { quizIndex, OList, XList, msgID, count } = event;
 
       //Count
       const OIndex = OList.findIndex((e) => { return e.id == newUser.id });
@@ -51,6 +51,15 @@ export const updateMember: CMD = {
 
       const quizMsg = msg.channel.messages.cache.find((e) => { return e.id == msgID; })
       await quizMsg?.edit(makeQuizStr(OList, XList, count));
+
+      writeJSON(dirEventDB, {
+        quizIndex: quizIndex,
+        OList: OList,
+        XList: XList,
+        msgID: msgID,
+        count: count
+      });
+
       await msg.reply(`이름 변경이 완료되었습니다!`);
     } else await msg.reply(`참가 명령어를 통해 참가자 등록을 먼저 해주세요!`);
   }

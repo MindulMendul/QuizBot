@@ -72,6 +72,7 @@ export const quiz: CMD = {
       const userDB = readJSON(dirUserDB) as Array<PARTICIPANT>;
       const user = userDB.find((e) => { return e.id === memberID; }); // entity가 userDB 안에 있는지 검사
 
+
       if (user) {
         const event = readJSON(dirEventDB) as EVENT;
         let { quizIndex, msgID, OList, XList, count } = event;

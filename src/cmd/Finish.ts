@@ -20,9 +20,9 @@ export const finish: CMD = {
         }).length;
       };
       const rankList = userDB.sort((a, b) => {
-        return numO(a) - numO(b);
+        return numO(b) - numO(a);
       }).map((e, i) => {
-        return `${i + 1}. ${e.name}: ${numO(e)}`;
+        return `${i + 1}. ${e.name}\n> 정답: ${numO(e)}개 (정답률:${2.5 * numO(e)}%)`;
       });
       return rankList.join('\n');
     };

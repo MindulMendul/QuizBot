@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageButton, TextChannel } from 'discord.js';
+import { MessageActionRow, MessageButton } from 'discord.js';
 import { CMD, EMBED, EVENT, PARTICIPANT, QUIZ } from '../types/type';
 import { dirEventDB, dirQuizDB, dirUserDB } from '../../bot';
 import readJSON from '../func/readJSON';
@@ -71,6 +71,8 @@ export const grade: CMD = {
     const filter = () => { return msg.author.id === process.env.OWNER_ID; };
     const collector = asdf.createMessageComponentCollector({ filter });
     collector.on('collect', async (i) => {
+      if (!i.member) return;
+      if (i.member.user.id != process.env.OWNER_ID) return;
       if (i.customId == 'next') {
         const makeScoreStr = () => {
           const numO = (e: PARTICIPANT) => {
@@ -80,7 +82,7 @@ export const grade: CMD = {
           };
 
           const rankList = userDB.sort((a, b) => {
-            return numO(a) - numO(b);
+            return numO(b)- numO(a);
           }).map((e, i) => {
             return `${i + 1}. ${e.name}: ${numO(e)}`;
           });

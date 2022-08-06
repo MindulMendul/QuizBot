@@ -8,9 +8,10 @@ import { insertMember } from '../cmd/InsertMember';
 import { updateMember } from '../cmd/UpdateMember';
 import { deleteMember } from '../cmd/DeleteMember';
 import { finish } from '../cmd/Finish';
+import { devGrade } from '../cmd/devGrade';
 
 const CmdtoName = async (map: Collection<string, string>, commands: Collection<string, CMD>, component: CMD) => {
-  const {cmds, name} = component;
+  const { cmds, name } = component;
   cmds.forEach((e: string) => map.set(e, name));
   commands.set(name, component);
 };
@@ -23,4 +24,5 @@ export const cmdLoad = (map: Collection<string, string>, commands: any) => {
   CmdtoName(map, commands, deleteMember);
   CmdtoName(map, commands, grade);
   CmdtoName(map, commands, finish);
+  CmdtoName(map, commands, devGrade);
 };
