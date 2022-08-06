@@ -4,3 +4,8 @@
 
 # Developer
 민둘랭가이드
+
+# Environment
+npm: 8.11.0
+node: 16.15.1
+ide: vscode
