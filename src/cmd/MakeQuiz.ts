@@ -11,7 +11,9 @@ export const makeQuiz: CMD = {
   async execute(msg: Message) {
     if (msg.author.id != process.env.OWNER_ID) return msg.reply(`봇 소유자만 가능한 명령어에요!`);
     else {
-      const workbook = readFile(`./src/assets/QuizSheet.xlsx`);
+      const QuizSheetName="QuizSheet2";
+      
+      const workbook = readFile(`./src/assets/${QuizSheetName}.xlsx`);
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       writeJSON(
